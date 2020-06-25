@@ -1,42 +1,43 @@
-class Personagem {
-    constructor(imagem) {
-        this.imagem = imagem
+class Personagem extends Animacao {
+    constructor(matriz, imagem, x, y, largura, altura) {
+        super(matriz, imagem, x, y, largura, altura)
 
-        this.frameX = 0
-        this.frameY = 0
-
-        // altura do personagem na tela
-        this.personagemAltura = 135
-        this.personagemLargura = 110
-        
-        // tamanho do personagem na imagem
-        this.personagemImagemAltura = 270
-        this.personagemImagemLargura = 220
-
-        // posição do personagem na tela
-        this.posicaoTelaX = 0
-        this.posicaoTelaY = height - this.personagemAltura
+        this.velocidadeDoPulo = 0
+        this.gravidade = 3
+        this.baseY = height - this.altura
+        this.pulos = 0
+    }
+    
+    pula() {
+        this.pulos++
+        rotate(PI / 7.0)
+        if(this.pulos <= 2) {
+            this.velocidadeDoPulo = -25
+        }
     }
 
-    exibe() {
-        // posX, posY, width, height, 0, 0, imageX, imageY, imageWidth, imageHeight
-        image(this.imagem, 
-            this.posicaoTelaX, this.posicaoTelaY, // posição do personagem na tela
-            this.personagemLargura, this.personagemAltura, // tamanho do personagem na tela
-            this.frameX * this.personagemImagemLargura, this.frameY * this.personagemImagemAltura,
-            this.personagemImagemLargura, this.personagemImagemAltura) // tamanho do quadrado
-        
-            this.anima()
+    aplicarGravidade() {
+        this.y += this.velocidadeDoPulo
+        this.velocidadeDoPulo += this.gravidade
+
+        if(this.y > this.baseY) {
+            this.y = this.baseY
+            this.pulos = 0
+        }
     }
 
-    anima() {
-        this.frameX++
-        if (this.frameX > 3) {
-            this.frameX = 0
-            this.frameY++
-        }
-        if (this.frameY > 3) {
-            this.frameY = 0
-        }
+    estaColidindo(inimigo) {
+        const precisao = 0.7
+        const colisao = collideRectRect(
+            this.x, this.y,
+            this.largura * precisao, 
+            this.altura * precisao,
+            inimigo.x,
+            inimigo.y,
+            inimigo.largura * precisao,
+            inimigo.altura * precisao
+        )
+
+        return colisao
     }
 }
