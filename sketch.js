@@ -58,35 +58,31 @@ function setup() {
         0, height * .03, 
         110, 135
     )
-    inimigo = new Inimigo(
+    inimigos.push(new Inimigo(
         inimigoMatriz, imagemInimigo, 
         width - 52, height * .03, 
-        52, 52
-    )
-    troll = new Inimigo(
+        52, 52, 
+        5, 100 // velocidade, delay
+    ))
+    inimigos.push(new Inimigo(
         trollMatriz, imagemTroll, 
         width - 100, 0, 
-        200, 200
-    )
-    inimigoVoador = new Inimigo(
+        200, 200, 
+        9, 500 // velocidade, delay
+    ))
+    inimigos.push(new Inimigo(
         inimigoVoadorMatriz, imagemInimigoVoador,
         width - 52, 200,
-        200, 150
-    )
-
-    
-    inimigos.push(inimigo)
-    inimigos.push(inimigoVoador)
-    inimigos.push(troll)
-
+        100, 75, 
+        5, 1000 // velocidade, delay
+    ))
 
     somDoJogo.loop()
-
     frameRate(40)
 }
 
 function keyPressed() {
-    if(key == 'ArrowUp') {
+    if (keyCode == UP_ARROW){
         personagem.pula()
         somDoPulo.play()
     }
@@ -98,13 +94,12 @@ function draw() {
 
     personagem.exibe()
     personagem.aplicarGravidade()
+    personagem.move()
 
     inimigos.map(obj => {
         obj.exibe()
         obj.move()
     })
-
-    
 
     if(personagem.estaColidindo(inimigos)) {
         console.log('colidiu')

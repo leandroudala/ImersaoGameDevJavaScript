@@ -1,11 +1,12 @@
 class Personagem extends Animacao {
-    constructor(matriz, imagem, x, y, largura, altura) {
+    constructor(matriz, imagem, x, y, largura, altura, velocidade) {
         super(matriz, imagem, x, y, largura, altura)
 
         this.velocidadeDoPulo = 0
         this.gravidade = 3
         this.baseY = this.y
         this.pulos = 0
+        this.velocidade = velocidade || 15
     }
     
     pula() {
@@ -43,5 +44,16 @@ class Personagem extends Animacao {
         })
 
         return colidiu
+    }
+
+    move() {    
+        if (keyIsDown(LEFT_ARROW)) {
+            if (personagem.x > 0 - personagem.largura / 2) {
+                personagem.x -= personagem.velocidade
+            }
+        }
+        if (keyIsDown(RIGHT_ARROW)) {
+            personagem.x += personagem.velocidade
+        }
     }
 }
