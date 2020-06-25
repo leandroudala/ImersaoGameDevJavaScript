@@ -4,7 +4,7 @@ class Personagem extends Animacao {
 
         this.velocidadeDoPulo = 0
         this.gravidade = 3
-        this.baseY = height - this.altura
+        this.baseY = this.y
         this.pulos = 0
     }
     
@@ -26,18 +26,22 @@ class Personagem extends Animacao {
         }
     }
 
-    estaColidindo(inimigo) {
+    estaColidindo(inimigos) {
         const precisao = 0.7
-        const colisao = collideRectRect(
-            this.x, this.y,
-            this.largura * precisao, 
-            this.altura * precisao,
-            inimigo.x,
-            inimigo.y,
-            inimigo.largura * precisao,
-            inimigo.altura * precisao
-        )
+        let colidiu = false
 
-        return colisao
+        inimigos.map(inimigo => {
+            colidiu = colidiu || collideRectRect(
+                this.x, this.y,
+                this.largura * precisao, 
+                this.altura * precisao,
+                inimigo.x,
+                inimigo.y,
+                inimigo.largura * precisao,
+                inimigo.altura * precisao
+            )
+        })
+
+        return colidiu
     }
 }

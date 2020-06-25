@@ -2,6 +2,9 @@
 let imagemCenario
 let imagemPersonagem
 let imagemInimigo
+let imagemInimigoVoador
+let imagemTroll
+
 let cenario
 let personagem
 
@@ -13,16 +16,35 @@ const inimigoMatriz = {
     altura: 104
 }
 const personagemMatriz = {
-    cols: 3,
-    rows: 3,
+    cols: 4,
+    rows: 4,
     largura: 220,
     altura: 270
 }
+const trollMatriz = {
+    cols: 4,
+    rows: 5,
+    maxLastRow: 2,
+    largura: 400,
+    altura: 400
+}
+const inimigoVoadorMatriz = {
+    rows: 5,
+    cols: 3,
+    largura: 200,
+    altura: 150,
+    maxLastRow: 0
+}
+
+
+const inimigos = []
 
 function preload() {
     imagemCenario = loadImage('assets/imagens/cenario/floresta.png')
     imagemPersonagem = loadImage('assets/imagens/personagem/correndo.png')
     imagemInimigo = loadImage('assets/imagens/inimigos/gotinha.png')
+    imagemInimigoVoador = loadImage('assets/imagens/inimigos/gotinha-voadora.png')
+    imagemTroll = loadImage('assets/imagens/inimigos/troll.png')
 
     somDoJogo = loadSound('assets/sons/trilha_jogo.mp3')
     somDoPulo = loadSound('assets/sons/somPulo.mp3')
@@ -33,10 +55,31 @@ function setup() {
     cenario = new Cenario(imagemCenario, 3)
     personagem = new Personagem(
         personagemMatriz, imagemPersonagem, 
-        0, height - 135, 
+        0, height * .03, 
         110, 135
     )
-    inimigo = new Inimigo(inimigoMatriz, imagemInimigo, width - 52, height - 52 , 52, 52)
+    inimigo = new Inimigo(
+        inimigoMatriz, imagemInimigo, 
+        width - 52, height * .03, 
+        52, 52
+    )
+    troll = new Inimigo(
+        trollMatriz, imagemTroll, 
+        width - 100, 0, 
+        200, 200
+    )
+    inimigoVoador = new Inimigo(
+        inimigoVoadorMatriz, imagemInimigoVoador,
+        width - 52, 200,
+        200, 150
+    )
+
+    
+    inimigos.push(inimigo)
+    inimigos.push(inimigoVoador)
+    inimigos.push(troll)
+
+
     somDoJogo.loop()
 
     frameRate(40)
@@ -56,11 +99,15 @@ function draw() {
     personagem.exibe()
     personagem.aplicarGravidade()
 
-    inimigo.exibe()
-    inimigo.move()
+    inimigos.map(obj => {
+        obj.exibe()
+        obj.move()
+    })
 
-    if(personagem.estaColidindo(inimigo)) {
+    
+
+    if(personagem.estaColidindo(inimigos)) {
         console.log('colidiu')
-        noLoop()
+        // noLoop()
     }
 }

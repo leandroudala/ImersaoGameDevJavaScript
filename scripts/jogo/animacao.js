@@ -3,12 +3,12 @@ class Animacao {
     constructor(matriz, imagem, x, y, largura, altura) {
         this.matriz = matriz
         this.imagem = imagem
-        this.x = x
-        this.y = y
         this.largura = largura
         this.altura = altura
         this.frameX = 0
         this.frameY = 0
+        this.x = x
+        this.y = height - this.altura - y
     }
 
     exibe() {
@@ -23,13 +23,18 @@ class Animacao {
     }
 
     anima() {
-        this.frameX++
-        if (this.frameX > this.matriz.cols) {
+        if (++this.frameX >= this.matriz.cols) {
             this.frameX = 0
             this.frameY++
         }
-        if (this.frameY > this.matriz.rows) {
+        if (this.frameY >= this.matriz.rows) {
             this.frameY = 0
+        }
+        if (this.matriz.maxLastRow) {
+            if (this.frameY == this.matriz.rows && this.frameX >= this.matriz.maxLastRow) {
+                this.frameX = 0
+                this.frameY = 0
+            }
         }
     }
 }
